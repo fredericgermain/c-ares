@@ -567,7 +567,7 @@ static int get_REG_SZ(HKEY hKey, const char *leafKeyName, char **outptr)
   *outptr = NULL;
 
   /* Find out size of string stored in registry */
-  res = RegQueryValueEx(hKey, leafKeyName, 0, NULL, NULL, &size);
+  res = RegQueryValueExA(hKey, leafKeyName, 0, NULL, NULL, &size);
   if ((res != ERROR_SUCCESS && res != ERROR_MORE_DATA) || !size)
     return 0;
 
@@ -578,7 +578,7 @@ static int get_REG_SZ(HKEY hKey, const char *leafKeyName, char **outptr)
     return 0;
 
   /* Get the value for real */
-  res = RegQueryValueEx(hKey, leafKeyName, 0, NULL,
+  res = RegQueryValueExA(hKey, leafKeyName, 0, NULL,
                         (unsigned char *)*outptr, &size);
   if ((res != ERROR_SUCCESS) || (size == 1))
   {
@@ -609,7 +609,7 @@ static int get_REG_SZ_9X(HKEY hKey, const char *leafKeyName, char **outptr)
   *outptr = NULL;
 
   /* Find out size of string stored in registry */
-  res = RegQueryValueEx(hKey, leafKeyName, 0, &dataType, NULL, &size);
+  res = RegQueryValueExA(hKey, leafKeyName, 0, &dataType, NULL, &size);
   if ((res != ERROR_SUCCESS && res != ERROR_MORE_DATA) || !size)
     return 0;
 
@@ -620,7 +620,7 @@ static int get_REG_SZ_9X(HKEY hKey, const char *leafKeyName, char **outptr)
     return 0;
 
   /* Get the value for real */
-  res = RegQueryValueEx(hKey, leafKeyName, 0, &dataType,
+  res = RegQueryValueExA(hKey, leafKeyName, 0, &dataType,
                         (unsigned char *)*outptr, &size);
   if ((res != ERROR_SUCCESS) || (size == 1))
   {
@@ -665,11 +665,11 @@ static int get_enum_REG_SZ(HKEY hKeyParent, const char *leafKeyName,
   for(;;)
   {
     enumKeyNameBuffSize = sizeof(enumKeyName);
-    res = RegEnumKeyEx(hKeyParent, enumKeyIdx++, enumKeyName,
+    res = RegEnumKeyExA(hKeyParent, enumKeyIdx++, enumKeyName,
                        &enumKeyNameBuffSize, 0, NULL, NULL, NULL);
     if (res != ERROR_SUCCESS)
       break;
-    res = RegOpenKeyEx(hKeyParent, enumKeyName, 0, KEY_QUERY_VALUE,
+    res = RegOpenKeyExA(hKeyParent, enumKeyName, 0, KEY_QUERY_VALUE,
                        &hKeyEnum);
     if (res != ERROR_SUCCESS)
       continue;
@@ -700,7 +700,7 @@ static int get_DNS_Registry_9X(char **outptr)
 
   *outptr = NULL;
 
-  res = RegOpenKeyEx(HKEY_LOCAL_MACHINE, WIN_NS_9X, 0, KEY_READ,
+  res = RegOpenKeyExA(HKEY_LOCAL_MACHINE, WIN_NS_9X, 0, KEY_READ,
                      &hKey_VxD_MStcp);
   if (res != ERROR_SUCCESS)
     return 0;
@@ -732,7 +732,7 @@ static int get_DNS_Registry_NT(char **outptr)
 
   *outptr = NULL;
 
-  res = RegOpenKeyEx(HKEY_LOCAL_MACHINE, WIN_NS_NT_KEY, 0, KEY_READ,
+  res = RegOpenKeyExA(HKEY_LOCAL_MACHINE, WIN_NS_NT_KEY, 0, KEY_READ,
                      &hKey_Tcpip_Parameters);
   if (res != ERROR_SUCCESS)
     return 0;
@@ -754,7 +754,7 @@ static int get_DNS_Registry_NT(char **outptr)
     goto done;
 
   /* Try adapter specific parameters */
-  res = RegOpenKeyEx(hKey_Tcpip_Parameters, "Interfaces", 0,
+  res = RegOpenKeyExA(hKey_Tcpip_Parameters, "Interfaces", 0,
                      KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS,
                      &hKey_Interfaces);
   if (res != ERROR_SUCCESS)
