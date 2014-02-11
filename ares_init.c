@@ -1359,6 +1359,7 @@ static int init_by_defaults(ares_channel channel)
     channel->tcp_port = htons(NAMESERVER_PORT);
 
   if (channel->nservers == -1) {
+#if 0
     /* If nobody specified servers, try a local named. */
     channel->servers = malloc(sizeof(struct server_state));
     if (!channel->servers) {
@@ -1368,6 +1369,9 @@ static int init_by_defaults(ares_channel channel)
     channel->servers[0].addr.family = AF_INET;
     channel->servers[0].addr.addrV4.s_addr = htonl(INADDR_LOOPBACK);
     channel->nservers = 1;
+#else
+	channel->nservers = 0;
+#endif
   }
 
 #if defined(USE_WINSOCK)
