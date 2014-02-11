@@ -111,6 +111,11 @@ void ares_query(ares_channel channel, const char *name, int dnsclass,
   struct qquery *qquery;
   unsigned char *qbuf;
   int qlen, rd, status;
+	
+  if (channel->nservers == 0) {
+    callback(arg, ARES_ECONNREFUSED, 0, NULL, 0);
+	return;
+  }
 
   /* Compose the query. */
   rd = !(channel->flags & ARES_FLAG_NORECURSE);
